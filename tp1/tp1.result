@@ -1,0 +1,108 @@
+Multiplication de matrices dimension=   2 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil=  4) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil=  8) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=   2 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension=   4 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil=  4) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil=  8) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=   4 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension=   8 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil=  4) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil=  8) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=   8 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension=  16 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil=  4) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil=  8) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=  16 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension=  32 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil=  4) =    0.016 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil=  8) =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=  32 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension=  64 temps conventionnelle      =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil=  4) =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil=  8) =    0.016 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil= 16) =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension=  64 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension= 128 temps conventionnelle      =    0.002 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil=  4) =    0.018 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil=  8) =    0.015 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil= 16) =    0.016 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil= 32) =    0.000 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil= 64) =    0.000 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil=128) =    0.000 s.
+Multiplication de matrices dimension= 128 temps Strassen (seuil=256) =    0.000 s.
+
+Multiplication de matrices dimension= 256 temps conventionnelle      =    0.037 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil=  4) =    0.179 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil=  8) =    0.052 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil= 16) =    0.022 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil= 32) =    0.014 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil= 64) =    0.013 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil=128) =    0.013 s.
+Multiplication de matrices dimension= 256 temps Strassen (seuil=256) =    0.022 s.
+
+Multiplication de matrices dimension= 512 temps conventionnelle      =    0.217 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil=  4) =    1.037 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil=  8) =    0.339 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil= 16) =    0.140 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil= 32) =    0.096 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil= 64) =    0.090 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil=128) =    0.099 s.
+Multiplication de matrices dimension= 512 temps Strassen (seuil=256) =    0.122 s.
+
+Multiplication de matrices dimension=1024 temps conventionnelle      =    2.014 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil=  4) =    7.253 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil=  8) =    2.172 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil= 16) =    0.992 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil= 32) =    0.675 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil= 64) =    0.615 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil=128) =    0.683 s.
+Multiplication de matrices dimension=1024 temps Strassen (seuil=256) =    0.865 s.
+
+Multiplication de matrices dimension=2048 temps conventionnelle      =  102.646 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil=  4) =   51.409 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil=  8) =   15.241 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil= 16) =    6.873 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil= 32) =    4.776 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil= 64) =    4.407 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil=128) =    4.798 s.
+Multiplication de matrices dimension=2048 temps Strassen (seuil=256) =    6.056 s.
+
+Multiplication de matrices dimension=4096 temps conventionnelle      = 1021.656 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil=  4) =  360.522 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil=  8) =  107.703 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil= 16) =   48.327 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil= 32) =   33.400 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil= 64) =   31.175 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil=128) =   34.036 s.
+Multiplication de matrices dimension=4096 temps Strassen (seuil=256) =   43.179 s.
+
