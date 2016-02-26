@@ -1,0 +1,8 @@
+package TP2;
+
+public class data {
+	public data()
+	{
+		
+	}
+}
