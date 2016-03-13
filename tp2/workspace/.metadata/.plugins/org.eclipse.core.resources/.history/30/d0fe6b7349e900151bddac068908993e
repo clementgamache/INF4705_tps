@@ -1,0 +1,39 @@
+package TP2;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class TableauDynamique {
+
+	private ArrayList<ArrayList<Integer>> array;
+	
+	public TableauDynamique(List<Emplacement> emplacements) {
+		array = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> currentLine = null;
+		ArrayList<Integer> previousLine = null;
+		array.add(new ArrayList<Integer>(Collections.nCopies(emplacements.size()+1, 0)));
+		int j = 0;
+		while (j < 20) {//lists are different 
+			array.add(new ArrayList<Integer>(Collections.nCopies(emplacements.size()+1, 0)));
+			currentLine = array.get(array.size()-1);
+			currentLine.set(0, ++j);
+			for (int i = 0 ; i < emplacements.size() ; i++) {
+				Emplacement emplacement = emplacements.get(i);
+				int jmq = Math.max(0, j - emplacement.getPoulet());
+				currentLine.set(i + 1, 
+						Math.max(emplacement.getRevenu() + array.get(jmq).get(i), 
+								array.get(j).get(i)));
+			}
+		}
+		for (ArrayList<Integer> a : array) {
+			String o = "";
+			for (Integer i : a) {
+				o += i.toString() + "\t";
+			}
+			System.out.println(o);
+	}
+	
+	
+	}
+}

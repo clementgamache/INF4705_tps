@@ -30,6 +30,23 @@ public class Emplacement {
 		return (float)revenu/(float)poulet;
 	}
 	
+	public static float getConsommationTotale(List<Emplacement> emplacements) {
+		float consommation = 0;
+		for (Emplacement emplacement : emplacements) {
+			consommation += emplacement.poulet;
+		}
+		
+		return consommation;
+	}
+	
+	public static float getRevenuTotal(List<Emplacement> emplacements) {
+		float revenu = 0;
+		for (Emplacement emplacement : emplacements) {
+			revenu += emplacement.revenu;
+		}
+		
+		return revenu;
+	}
 	
 	public static float getRentabiliteTotale(List<Emplacement> emplacements) {
 		float revenu, consommation;
@@ -49,7 +66,7 @@ public class Emplacement {
 			emp += Integer.valueOf(emplacement.getId()).toString() + " ";
 		}
 		System.out.println("Emplacements choisis : " + emp);
-		System.out.println("Rentabilite totale : " + Float.valueOf(getRentabiliteTotale(emplacements)).toString());
+		System.out.println("Revenu total : " + Float.valueOf(getRevenuTotal(emplacements)).toString());
 		
 	}
 }

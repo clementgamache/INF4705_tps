@@ -5,20 +5,22 @@ import java.io.IOException;
 public class dynamique {
 	public static void main(String [ ] args)
 	{
-		String fileName = "";
-		boolean print = false;
-		for (int i = 0; i < args.length; i++)
-		{
-			if (args[i].equals("-f"))
-			{
-				fileName = args[++i];
-				
-			}
-			else if (args[i].equals("-p"))
-			{
-				print = true;
-			}
-		}
+//		String fileName = "";
+//		boolean print = false;
+//		for (int i = 0; i < args.length; i++)
+//		{
+//			if (args[i].equals("-f"))
+//			{
+//				fileName = args[++i];
+//				
+//			}
+//			else if (args[i].equals("-p"))
+//			{
+//				print = true;
+//			}
+//		}
+		String fileName = "WC-10-10-10.txt";
+		boolean print = true;
 		Ville ville;
 		try
 		{
