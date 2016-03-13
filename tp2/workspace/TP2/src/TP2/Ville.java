@@ -5,7 +5,6 @@ import java.util.*;
 
 public class Ville {
 	
-	private int nombreEmplacement;
 	private List<Emplacement> emplacements;
 	private int capaciteFournisseur;
 	
@@ -20,7 +19,7 @@ public class Ville {
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		String line = bufferedReader.readLine();
 		line.trim();
-		nombreEmplacement = Integer.valueOf(line);
+		int nombreEmplacement = Integer.valueOf(line);
 		emplacements = new LinkedList<Emplacement>();
 		for (int i = 0; i < nombreEmplacement; ++i)
 		{
@@ -31,10 +30,10 @@ public class Ville {
 				throw new IOException();
 			}
 			line.trim();
-			String[] lineValues = line.split("\t");
-			int id     = Integer.valueOf(lineValues[0]);
-			int revenu = Integer.valueOf(lineValues[1]);
-			int poulet = Integer.valueOf(lineValues[2]);
+			String[] lineValues = line.split("\\s+");
+			int id     = Integer.valueOf(lineValues[1]);
+			int revenu = Integer.valueOf(lineValues[2]);
+			int poulet = Integer.valueOf(lineValues[3]);
 			emplacements.add(new Emplacement(id, revenu, poulet));
 		}
 		line = bufferedReader.readLine();
@@ -46,7 +45,7 @@ public class Ville {
 	public void print()
 	{
 		System.out.println("Ville :");
-		System.out.println("nombre d'emplacement : " + String.valueOf(nombreEmplacement));
+		System.out.println("nombre d'emplacement : " + String.valueOf(emplacements.size()));
 		for (Emplacement emplacement : emplacements)
 		{
 			System.out.format("id=%4d, revenu=%4d, poulet=%4d\n", emplacement.getId(), emplacement.getRevenu(), emplacement.getPoulet());
@@ -56,50 +55,62 @@ public class Ville {
 	
 	public void vorace(boolean print)
 	{
+		List<Emplacement> meilleursEmplacements = null;
+		//compute 10 times
 		for (int i = 0; i < 10 ; ++i)
 		{
-			List<Emplacement> temp = new LinkedList<Emplacement>();
-			List<Emplacement> refuser = new LinkedList<Emplacement>();
-			int sommepoulet = 0;
-			boolean done = false;
-			while (sommepoulet < capaciteFournisseur)
+			List<Emplacement> emplacementsRestants = new LinkedList<Emplacement>();
+			List<Emplacement> emplacementsUtilises = new LinkedList<Emplacement>();
+			emplacementsRestants.addAll(emplacements);
+			int pouletUtilise = 0;
+			float sommeRentabilite = 0;
+			for (Emplacement emplacement : emplacementsRestants)
 			{
-				float sommeRentabilite = 0;
-				for (Emplacement emplacement : emplacements)
-				{
-					sommeRentabilite += emplacement.getRentabilite();
-				}
+				sommeRentabilite += emplacement.getRentabilite();
+			}
+			while (pouletUtilise < capaciteFournisseur && emplacementsRestants.size() > 0)
+			{
+				//la probabilite d'un emplacement sera sa rentabilite divisee par sommerentabilite
+				
 				Random randomGenerator = new Random();
 				float randomNumber = randomGenerator.nextFloat() * sommeRentabilite;
-				float a = 0;
-				for (Emplacement emplacement : emplacements)
+				float rentabiliteCumulee = 0;
+				//emplacementUtilise est l<emplacement calcule
+				Emplacement emplacementUtilise= null;
+				for (Emplacement emplacement : emplacementsRestants)
 				{
-					a += emplacement.getRentabilite();
-					if (randomNumber <= a)
+					rentabiliteCumulee += emplacement.getRentabilite();
+					if (randomNumber <= rentabiliteCumulee)
 					{
-						sommepoulet += emplacement.getPoulet();
-						if (sommepoulet > capaciteFournisseur)
-						{
-							sommepoulet -= emplacement.getPoulet();
-							refuser.add(emplacement);
-							emplacements.remove(emplacement);
-							break;
-						}
-						temp.add(emplacement);
-						emplacements.remove(emplacement);
-						
+						emplacementUtilise = emplacement;
 						break;
 					}
 				}
-				done = emplacements.size() == 0;
-				
+
+				//Ajout de l<emplacement s'il est valide
+				if (pouletUtilise + emplacementUtilise.getPoulet() <= capaciteFournisseur) {
+					pouletUtilise += emplacementUtilise.getPoulet();
+					emplacementsUtilises.add(emplacementUtilise);
+				}
+				sommeRentabilite -= emplacementUtilise.getRentabilite();
+				emplacementsRestants.remove(emplacementUtilise);
+			}
+			if (meilleursEmplacements == null) {
+				meilleursEmplacements = emplacementsUtilises;
+			}
+			else if (Emplacement.getRentabiliteTotale(emplacementsUtilises) > Emplacement.getRentabiliteTotale(meilleursEmplacements)) {
+				meilleursEmplacements = emplacementsUtilises;
 			}
 		}
+		if (print) {
+			Emplacement.printEmplacementsChoisis(meilleursEmplacements);			
+		}
+		
 	}
 	
 	public void dynamique(boolean print)
 	{
-		
+	
 	}
 	
 	public void local(boolean print)

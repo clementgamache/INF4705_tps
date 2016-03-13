@@ -1,5 +1,7 @@
 package TP2;
 
+import java.util.List;
+
 public class Emplacement {
 	private int id;
 	private int revenu;
@@ -26,5 +28,28 @@ public class Emplacement {
 	public float getRentabilite()
 	{
 		return (float)revenu/(float)poulet;
+	}
+	
+	
+	public static float getRentabiliteTotale(List<Emplacement> emplacements) {
+		float revenu, consommation;
+		revenu = consommation = 0;
+		for (Emplacement emplacement : emplacements) {
+			revenu += emplacement.revenu;
+			consommation += emplacement.poulet;
+		}
+		
+		return consommation > 0 ? revenu / consommation : 0;
+	}
+	
+	public static void printEmplacementsChoisis(List<Emplacement> emplacements) {
+		System.out.println("Nombre d'emplacements choisis : " + Integer.valueOf(emplacements.size()).toString());
+		String emp = "";
+		for (Emplacement emplacement : emplacements) {
+			emp += Integer.valueOf(emplacement.getId()).toString() + " ";
+		}
+		System.out.println("Emplacements choisis : " + emp);
+		System.out.println("Rentabilite totale : " + Float.valueOf(getRentabiliteTotale(emplacements)).toString());
+		
 	}
 }

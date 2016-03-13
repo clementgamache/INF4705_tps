@@ -1,0 +1,39 @@
+package TP2;
+
+import java.util.List;
+
+public class Emplacement {
+	private int id;
+	private int revenu;
+	private int poulet;
+	
+	public Emplacement(int id, int revenu, int poulet)
+	{
+		this.id = id;
+		this.revenu = revenu;
+		this.poulet = poulet;
+	}
+	public int getId()
+	{
+		return id;
+	}
+	public int getRevenu()
+	{
+		return revenu;
+	}
+	public int getPoulet()
+	{
+		return poulet;
+	}
+	public float getRentabilite()
+	{
+		return (float)revenu/(float)poulet;
+	}
+	
+	public static void printEmplacementsChoisis(List<Emplacement> emplacements) {
+		System.out.println("Nombre d'emplacements choisis : " + Integer.valueOf(emplacements.size()).toString());
+		for (Emplacement emplacement : emplacements) {
+			System.out.println(Integer.valueOf(emplacement.getId()).toString());
+		}
+	}
+}
