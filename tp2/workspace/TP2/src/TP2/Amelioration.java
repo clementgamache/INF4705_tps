@@ -8,6 +8,7 @@ public class Amelioration {
 	private List<Emplacement> removals_;
 	private int gain_;
 	private static List<Emplacement> currentSolution_;
+	private static List<Emplacement> currentGarbage_;
 	private static int jeu_;
 	private static Amelioration bestAmelioration_;
 	
@@ -24,32 +25,14 @@ public class Amelioration {
 	}
 	
 	public void setBestAmelioration() {
-		if (bestAmelioration_ == null || this.gain_ > bestAmelioration_.gain_){
-			bestAmelioration_ = this;
-		}
+		bestAmelioration_ = this;
 	}
 	
-	public static void updateSetting(List<Emplacement> currentSolution, int jeu) {
+	public static void updateSetting(List<Emplacement> currentSolution, List<Emplacement> currentGarbage, int jeu) {
 		currentSolution_ = currentSolution;
+		currentGarbage_ = currentGarbage;
 		jeu_ = jeu;
 		bestAmelioration_ = null;
-	}
-	
-	private boolean isAllowed() {
-		int difference = 0;
-		int nouveauJeu = jeu_;
-		for (Emplacement addon : addons_) {
-			if (currentSolution_.contains(addon)) return false;
-			difference += addon.getRevenu();
-			nouveauJeu -= addon.getPoulet();
-		}
-		for (Emplacement removal : removals_) {
-			difference -= removal.getRevenu();
-			nouveauJeu += removal.getPoulet();
-		}
-		if (difference <= 0) return false;
-		if (nouveauJeu < 0) return false;
-		return true;
 	}
 	
 	private void setGain() {
@@ -63,40 +46,46 @@ public class Amelioration {
 	}
 	
 	public static boolean allowed(Emplacement e) {
-		return e.getPoulet() <= jeu_ && !currentSolution_.contains(e);
+		int diffPoulet = e.getPoulet();
+		int diffRevenu = e.getRevenu();
+		return allowed(diffPoulet, diffRevenu);
 	}
 	public static boolean allowed(Emplacement addon, Emplacement removal) {
-		return addon.getPoulet() - removal.getPoulet() <= jeu_ &&
-				!currentSolution_.contains(addon) &&
-				addon.getRevenu() > removal.getRevenu();
+		int diffPoulet = addon.getPoulet() - removal.getPoulet();
+		int diffRevenu = addon.getRevenu() - removal.getRevenu();
+		return allowed(diffPoulet, diffRevenu);
 	}
 	public static boolean allowed(Emplacement addon1, Emplacement addon2, Emplacement removal1, Emplacement removal2) {
-		return addon1.getPoulet() + addon2.getPoulet() - removal1.getPoulet() - removal2.getPoulet() <= jeu_ &&
-				!currentSolution_.contains(addon1) &&
-				!currentSolution_.contains(addon2) &&
-				addon1.getRevenu() + addon2.getRevenu() > removal1.getRevenu() + removal2.getRevenu();
+		int diffPoulet = addon1.getPoulet() - removal1.getPoulet() + addon2.getPoulet() - removal2.getPoulet();
+		int diffRevenu = addon1.getRevenu() - removal1.getRevenu() + addon2.getRevenu() - removal2.getRevenu();
+		return allowed(diffPoulet, diffRevenu);
 	}
 	public static boolean allowed(Emplacement addon, Emplacement removal, Emplacement hybrid, boolean isAddon) {
-		if (isAddon) {
-			return addon.getPoulet() + hybrid.getPoulet()- removal.getPoulet() <= jeu_ &&
-					!currentSolution_.contains(addon) &&
-					!currentSolution_.contains(hybrid) &&
-					addon.getRevenu() + hybrid.getRevenu() > removal.getRevenu();
-		}
-		else {
-			return addon.getPoulet() - removal.getPoulet() - hybrid.getPoulet() <= jeu_ &&
-					!currentSolution_.contains(addon) &&
-					addon.getRevenu() > removal.getRevenu() + hybrid.getRevenu();
-		}
+		int mod = isAddon ? 1 : -1;
+		int diffPoulet = addon.getPoulet() - removal.getPoulet() + (mod * hybrid.getPoulet());
+		int diffRevenu = addon.getRevenu() - removal.getRevenu() + (mod * hybrid.getRevenu());
+		return allowed(diffPoulet, diffRevenu);
+		
 	}
+	
+	private static boolean allowed(int diffPoulet, int diffRevenu) {
+		int toBeat = isNull() ? 0 : bestAmelioration_.gain_;
+		return diffPoulet <= jeu_ && diffRevenu > toBeat;
+	}
+	
+	
+	
+	
 	
 	public static void apply() {
 		if (isNull()) return;
 		for (Emplacement addon : bestAmelioration_.addons_) {
 			currentSolution_.add(addon);
+			currentGarbage_.remove(addon);
 		}
 		for (Emplacement removal : bestAmelioration_.removals_) {
 			currentSolution_.remove(removal);
+			currentGarbage_.add(removal);
 		}
 	}
 }

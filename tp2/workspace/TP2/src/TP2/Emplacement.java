@@ -1,8 +1,9 @@
 package TP2;
 
+import java.util.Comparator;
 import java.util.List;
 
-public class Emplacement {
+public class Emplacement implements Comparable<Emplacement> {
 	private int id;
 	private int revenu;
 	private int poulet;
@@ -60,7 +61,8 @@ public class Emplacement {
 	}
 	
 	public static void printEmplacementsChoisis(List<Emplacement> emplacements) {
-		System.out.println("Nombre d'emplacements choisis : " + Integer.valueOf(emplacements.size()).toString());
+		//System.out.println("Nombre d'emplacements choisis : " + Integer.valueOf(emplacements.size()).toString());
+		emplacements.sort(Comparateur);
 		String emp = "";
 		for (Emplacement emplacement : emplacements) {
 			emp += Integer.valueOf(emplacement.getId()).toString() + " ";
@@ -69,4 +71,16 @@ public class Emplacement {
 		System.out.println("Revenu total : " + Double.valueOf(getRevenuTotal(emplacements)).toString());
 		
 	}
+	
+	public int compareTo(Emplacement comp) {
+		return this.id - comp.id;
+	}
+	
+	public static Comparator<Emplacement> Comparateur = new Comparator<Emplacement>() {
+	
+		public int compare(Emplacement e1, Emplacement e2) {
+		
+			return e1.compareTo(e2);
+		}
+	};
 }

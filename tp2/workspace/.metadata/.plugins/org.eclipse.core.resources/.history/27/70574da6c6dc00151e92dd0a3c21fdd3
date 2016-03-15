@@ -1,8 +1,0 @@
-package TP2;
-
-public class dynamique {
-	public static void main(String [ ] args)
-	{
-		
-	}
-}
