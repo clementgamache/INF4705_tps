@@ -3,16 +3,17 @@ package TP2;
 import java.io.*;
 import java.util.*;
 
-public class Ville {
-	
+public class Ville
+{
+
 	private List<Emplacement> emplacements;
 	private int capaciteFournisseur;
-	
+
 	public Ville(String fileName) throws IOException
 	{
 		readFile(fileName);
 	}
-	
+
 	private void readFile(String fileName) throws IOException
 	{
 		FileReader fileReader = new FileReader(fileName);
@@ -31,7 +32,7 @@ public class Ville {
 			}
 			line.trim();
 			String[] lineValues = line.split("\\s+");
-			int id     = Integer.valueOf(lineValues[1]);
+			int id = Integer.valueOf(lineValues[1]);
 			int revenu = Integer.valueOf(lineValues[2]);
 			int poulet = Integer.valueOf(lineValues[3]);
 			emplacements.add(new Emplacement(id, revenu, poulet));
@@ -41,29 +42,32 @@ public class Ville {
 		capaciteFournisseur = Integer.valueOf(line);
 		bufferedReader.close();
 	}
-	
-	public String getStats() {
+
+	public String getStats()
+	{
 		String o = "";
 		o += Integer.valueOf(emplacements.size()).toString() + ";";
 		o += Integer.valueOf(capaciteFournisseur).toString() + ";";
 		return o;
 	}
-	
+
 	public void print()
 	{
 		System.out.println("Ville :");
 		System.out.println("nombre d'emplacement : " + String.valueOf(emplacements.size()));
 		for (Emplacement emplacement : emplacements)
 		{
-			System.out.format("id=%4d, revenu=%4d, poulet=%4d\n", emplacement.getId(), emplacement.getRevenu(), emplacement.getPoulet());
+			System.out.format("id=%4d, revenu=%4d, poulet=%4d\n", emplacement.getId(), emplacement.getRevenu(),
+					emplacement.getPoulet());
 		}
 		System.out.println("capacité fournisseur : " + String.valueOf(capaciteFournisseur));
 	}
-	
-	private List<Emplacement> calculerVorace() {
+
+	public List<Emplacement> calculerVorace()
+	{
 		List<Emplacement> meilleursEmplacements = null;
-		//compute 10 times
-		for (int i = 0; i < 10 ; ++i)
+		// compute 10 times
+		for (int i = 0; i < 10; ++i)
 		{
 			List<Emplacement> emplacementsRestants = new LinkedList<Emplacement>();
 			List<Emplacement> emplacementsUtilises = new LinkedList<Emplacement>();
@@ -76,206 +80,247 @@ public class Ville {
 			}
 			while (pouletUtilise < capaciteFournisseur && emplacementsRestants.size() > 0)
 			{
-				//la probabilite d'un emplacement sera sa rentabilite divisee par sommerentabilite
-				
+				// la probabilite d'un emplacement sera sa rentabilite divisee
+				// par sommerentabilite
+
 				Random randomGenerator = new Random();
 				double randomNumber = randomGenerator.nextDouble() * sommeRentabilite;
 				double rentabiliteCumulee = 0;
-				//emplacementUtilise est l<emplacement calcule
-				Emplacement emplacementUtilise= null;
-				for (Emplacement emplacement : emplacementsRestants)
+				// emplacementUtilise est l<emplacement calcule
+				Emplacement emplacementUtilise = null;
+				for (Iterator<Emplacement> iter = emplacementsRestants.iterator(); iter.hasNext();)
 				{
+					Emplacement emplacement = iter.next();
 					rentabiliteCumulee += emplacement.getRentabilite();
 					if (randomNumber <= rentabiliteCumulee)
 					{
 						emplacementUtilise = emplacement;
+						iter.remove();
 						break;
 					}
 				}
+				if (emplacementUtilise == null) continue; // In case of rounding error, retry.
 
-				//Ajout de l<emplacement s'il est valide
-				//System.out.println(Integer.valueOf(emplacementsRestants.size()).toString());
-				if (pouletUtilise + emplacementUtilise.getPoulet() <= capaciteFournisseur) {
+				// Ajout de l<emplacement s'il est valide
+				// System.out.println(Integer.valueOf(emplacementsRestants.size()).toString());
+				if (pouletUtilise + emplacementUtilise.getPoulet() <= capaciteFournisseur)
+				{
 					pouletUtilise += emplacementUtilise.getPoulet();
 					emplacementsUtilises.add(emplacementUtilise);
 				}
 				sommeRentabilite -= emplacementUtilise.getRentabilite();
-				emplacementsRestants.remove(emplacementUtilise);
 			}
-			if (meilleursEmplacements == null) {
+			if (meilleursEmplacements == null)
+			{
 				meilleursEmplacements = emplacementsUtilises;
-			}
-			else if (Emplacement.getRevenuTotal(emplacementsUtilises) > Emplacement.getRevenuTotal(meilleursEmplacements)) {
+			} else if (Emplacement.getRevenuTotal(emplacementsUtilises) > Emplacement.getRevenuTotal(meilleursEmplacements))
+			{
 				meilleursEmplacements = emplacementsUtilises;
 			}
 		}
 		return meilleursEmplacements;
 	}
-	
+
 	public String vorace(boolean print)
 	{
 		List<Emplacement> resultat = calculerVorace();
-		if (print) {
-			Emplacement.printEmplacementsChoisis(resultat);			
+		if (print)
+		{
+			Emplacement.printEmplacementsChoisis(resultat);
 		}
-		return Integer.valueOf(Emplacement.getRevenuTotal(resultat)).toString() + ";";
-		
+		return Emplacement.getRevenuTotal(resultat) + ";";
+
 	}
-	
-	public String dynamique(boolean print)
+
+	public List<Emplacement> calculerDynamique()
 	{
-		//array[i, j] est le revenu maximal pour combler une capacite de j avec les i premiers emplacements
-		Integer[][] array = new Integer[capaciteFournisseur+1][emplacements.size()];
-		for (int i = 0 ; i < capaciteFournisseur+1 ; i++) {
-			for (int j = 0 ; j < emplacements.size(); j++) {
-				array[i][j] = 0;
+		// revenu[i, j] est le revenu maximal pour combler une capacite de j avec
+		// les i premiers emplacements
+		int[][] revenu = new int[emplacements.size()][capaciteFournisseur + 1];
+		// Transforme emplacement en tableau pour acces rapide
+		Emplacement[] emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
+
+		// Assignons a l'emplacements 0 tous les poulets inutiles en configurant
+		// le revenu de l'emplacement 0 pour tous nombre de poulet equal ou plus grand
+		// que la demande locale.
+		for (int j = emplacements[0].getPoulet(); j <= capaciteFournisseur; ++j)
+		{
+			revenu[0][emplacements[0].getPoulet()] = emplacements[0].getRevenu();
+		}
+
+		// Algorithm dynamique.
+		for (int i = 1; i < emplacements.length; i++) // Pour chaque emplacement suivant.
+		{
+			for (int j = 0; j < emplacements[i].getPoulet(); ++j)
+			{
+				revenu[i][j] = revenu[i - 1][j];
+			}
+			for (int j = emplacements[i].getPoulet(); j <= capaciteFournisseur; j++)
+			{
+				revenu[i][j] = Math.max(emplacements[i].getRevenu() + revenu[i - 1][j - emplacements[i].getPoulet()], revenu[i - 1][j]);
 			}
 		}
-		for (int j = 1 ; j < capaciteFournisseur + 1 ; j++) {
-			if (emplacements.get(0).getPoulet() <= j) {
-				array[j][0] = emplacements.get(0).getRevenu();
-			}
-			for (int i = 1 ; i < emplacements.size() ; i++) {
-				Emplacement emplacement = emplacements.get(i);
-				int jmq = j - emplacement.getPoulet();
-				int max1 = 0;
-				if (jmq >= 0) {
-					max1 = emplacement.getRevenu() + array[jmq][i-1];
-				}
-				array[j][i] = Math.max(max1, array[j][i-1]);
-			}
-		}
-		int i = emplacements.size()-1;
+
+		// Calcul de la propagation inverse pour retrouver les emplacements optimaux choisi.
+		int i = emplacements.length - 1;
 		int j = capaciteFournisseur;
-		int currentValue = array[j][i];
-		List<Emplacement> used = new LinkedList<Emplacement>(); 
-		while (currentValue > 0) {
-			if (i > 0 && array[j][i-1] == currentValue) {
+		int currentValue = revenu[i][j];
+		List<Emplacement> used = new LinkedList<Emplacement>();
+		while (currentValue > 0)
+		{
+			if (i > 0 && revenu[i - 1][j] == currentValue)
+			{
 				i--;
 			}
-			//else if (j > 0 && )
-			else {
-				Emplacement e = emplacements.get(i);
+			// else if (j > 0 && )
+			else
+			{
+				Emplacement e = emplacements[i];
 				used.add(e);
 				currentValue -= e.getRevenu();
 				j -= e.getPoulet();
 			}
 		}
-		if (print) {
-			Emplacement.printEmplacementsChoisis(used);			
+		return used;
+	}
+	
+	public String dynamique(boolean print)
+	{
+		List<Emplacement> used = calculerDynamique();
+		if (print)
+		{
+			Emplacement.printEmplacementsChoisis(used);
 		}
 		return Integer.valueOf(Emplacement.getRevenuTotal(used)).toString() + ";";
 	}
-	
-	public String local(boolean print)
-	{
-		List<Emplacement> meilleureSolution = calculerVorace();
-		List<Emplacement> solutionPrecedente = calculerVorace();
-		List<Emplacement> inutilises = new ArrayList<Emplacement>();
-		inutilises.addAll(emplacements);
-		for (Emplacement emplacement : meilleureSolution) {
-			inutilises.remove(emplacement);
-		}
-		
-		
-		
-		//Emplacement.printEmplacementsChoisis(meilleureSolution);
-		boolean changement = true;
-		long currentTime = System.currentTimeMillis();
-		List<Emplacement> addons;
-		List<Emplacement> removals;
-		Amelioration nouvelleAmelioration;
-		int jeu = 0;
-		while (changement) {
-			changement = false;
-			jeu = capaciteFournisseur - Emplacement.getConsommationTotale(meilleureSolution);
-			
-			//Emplacement.printEmplacementsChoisis(meilleureSolution);
-			
-			Amelioration.updateSetting(meilleureSolution, inutilises, jeu);
 
-				for (int j = 0 ; j < inutilises.size() ; j++) {
-					Emplacement eChange1 = inutilises.get(j);
-					//ajouter un nouveau
-					if (Amelioration.allowed(eChange1)) {				
-						addons = new ArrayList<Emplacement>();
-						addons.add(eChange1);
-						nouvelleAmelioration = new Amelioration(addons, new ArrayList<Emplacement>());
-						nouvelleAmelioration.setBestAmelioration();
-					}
-					
-					for (int i = 0 ; i < meilleureSolution.size() ; i++) {
-						Emplacement eCourant1 = meilleureSolution.get(i);
-						//Echanger 1 courant contre 1 nouveau
-						if (Amelioration.allowed(eChange1, eCourant1)) {					
-							addons = new ArrayList<Emplacement>();
-							removals = new ArrayList<Emplacement>();
-							addons.add(eChange1);
-							removals.add(eCourant1);
-							nouvelleAmelioration = new Amelioration(addons, removals);
-							nouvelleAmelioration.setBestAmelioration();
-						}
-					
-					
-					for (int k = i + 1 ; k < meilleureSolution.size(); k++) {
-						Emplacement eCourant2 = meilleureSolution.get(k);
-						//echanger 2 courants contre 1 nouveau
-						if (Amelioration.allowed(eChange1, eCourant1, eCourant2, false)) {					
-							addons = new ArrayList<Emplacement>();
-							removals = new ArrayList<Emplacement>();
-							addons.add(eChange1);
-							removals.add(eCourant1);
-							removals.add(eCourant2);
-							nouvelleAmelioration = new Amelioration(addons, removals);
-							nouvelleAmelioration.setBestAmelioration();
-						}
-						
-						for (int l = j + 1 ; l < inutilises.size() ; l++) {
-							Emplacement eChange2 = inutilises.get(l);
-							//Echanger 1 courant contre 2 nouveaux
-							if (Amelioration.allowed(eChange1, eCourant1, eChange2, true)) {						
-								addons = new ArrayList<Emplacement>();
-								removals = new ArrayList<Emplacement>();
-								addons.add(eChange1);
-								addons.add(eChange2);
-								removals.add(eCourant1);
-								nouvelleAmelioration = new Amelioration(addons, removals);
-								nouvelleAmelioration.setBestAmelioration();
-							}
-							
-							//Echanger 2 courants contre 2 nouveaux
-							if (Amelioration.allowed(eChange1, eChange2, eCourant1, eCourant2)) {						
-								addons = new ArrayList<Emplacement>();
-								removals = new ArrayList<Emplacement>();
-								addons.add(eChange1);
-								addons.add(eChange2);
-								removals.add(eCourant1);
-								removals.add(eCourant2);
-								nouvelleAmelioration = new Amelioration(addons, removals);
-								nouvelleAmelioration.setBestAmelioration();
+	public List<Emplacement> calculerLocal()
+	{
+		Emplacement[]     emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
+		List<Emplacement> voraceList   = calculerVorace();
+		Set<Emplacement>  voraceSet    = new HashSet<Emplacement>(voraceList);
+		boolean[]         choisi       = new boolean[emplacements.length];
+		for (int i = 0; i < emplacements.length; ++i) if (voraceSet.contains(emplacements[i])) choisi[i] = true;
+
+		// Emplacement.printEmplacementsChoisis(meilleureSolution);
+		int consommation = Emplacement.getConsommationTotale(voraceList);
+		int revenu       = Emplacement.getRevenuTotal(voraceList);
+		boolean changement = true;
+		while (changement)
+		{
+			changement                = false;
+			int iChoisi               = -1;
+			int jChoisi               = -1;
+			int kChoisi               = -1;
+			int lChoisi               = -1;
+			int meilleurRevenu        = revenu;
+			int meilleureConsommation = consommation;
+			for (int i = 0; i < emplacements.length; ++i) if (choisi[i])
+			{
+				for (int j = 0; j < i; ++j) if (choisi[j])
+				{
+					for (int k = 0; k < emplacements.length; ++k) if (!choisi[k])
+					{
+						for (int l = 0; l < k; ++l) if (!choisi[l])
+						{
+							// Enleve i et j, ajoute k et l.
+							int nouveauRevenu = revenu - emplacements[i].getRevenu() - emplacements[j].getRevenu() + emplacements[k].getRevenu() + emplacements[l].getRevenu();
+							int nouvelleConsommation = consommation - emplacements[i].getPoulet() - emplacements[j].getPoulet() + emplacements[k].getPoulet() + emplacements[l].getPoulet();
+							if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
+							{
+								iChoisi = i;
+								jChoisi = j;
+								kChoisi = k;
+								lChoisi = l;
+								meilleurRevenu = nouveauRevenu;
+								meilleureConsommation = nouvelleConsommation;
+								changement = true;
 							}
 						}
+
+						// Enleve i et j, ajoute k.
+						int nouveauRevenu = revenu - emplacements[i].getRevenu() - emplacements[j].getRevenu() + emplacements[k].getRevenu();
+						int nouvelleConsommation = consommation - emplacements[i].getPoulet() - emplacements[j].getPoulet() + emplacements[k].getPoulet();
+						if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
+						{
+							iChoisi = i;
+							jChoisi = j;
+							kChoisi = k;
+							lChoisi = -1;
+							meilleurRevenu = nouveauRevenu;
+							meilleureConsommation = nouvelleConsommation;
+							changement = true;
+						}
 					}
-					double timeConv = 0.001*(System.currentTimeMillis() - currentTime);
-					if (timeConv > 30) {
-						Amelioration.apply();
-						return Integer.valueOf(Emplacement.getRevenuTotal(meilleureSolution)).toString() + ";";
+				}
+				for (int k = 0; k < emplacements.length; ++k) if (!choisi[k])
+				{
+					for (int l = 0; l < k; ++l) if (!choisi[l])
+					{
+						// Enleve i, ajoute k et l.
+						int nouveauRevenu = revenu - emplacements[i].getRevenu() + emplacements[k].getRevenu() + emplacements[l].getRevenu();
+						int nouvelleConsommation = consommation - emplacements[i].getPoulet() + emplacements[k].getPoulet() + emplacements[l].getPoulet();
+						if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
+						{
+							iChoisi = i;
+							jChoisi = -1;
+							kChoisi = k;
+							lChoisi = l;
+							meilleurRevenu = nouveauRevenu;
+							meilleureConsommation = nouvelleConsommation;
+							changement = true;
+						}
+					}
+
+					// Enleve i, ajoute k.
+					int nouveauRevenu = revenu - emplacements[i].getRevenu() + emplacements[k].getRevenu();
+					int nouvelleConsommation = consommation - emplacements[i].getPoulet() + emplacements[k].getPoulet();
+					if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
+					{
+						iChoisi = i;
+						jChoisi = -1;
+						kChoisi = k;
+						lChoisi = -1;
+						meilleurRevenu = nouveauRevenu;
+						meilleureConsommation = nouvelleConsommation;
+						changement = true;
 					}
 				}
 			}
-			Amelioration.apply();
-			if (!Amelioration.isNull()) changement = true;
+			if (changement)
+			{
+				if (iChoisi >= 0) choisi[iChoisi] = false;
+				if (jChoisi >= 0) choisi[jChoisi] = false;
+				if (kChoisi >= 0) choisi[kChoisi] = true;
+				if (lChoisi >= 0) choisi[lChoisi] = true;
+				revenu = meilleurRevenu;
+				consommation = meilleureConsommation;
+			}
 		}
 
-		
-		if (print) {
-			print();
-			Emplacement.printEmplacementsChoisis(meilleureSolution);			
-		}
-		return Integer.valueOf(Emplacement.getRevenuTotal(meilleureSolution)).toString() + ";";
+		List<Emplacement> meilleureSolution = new LinkedList<Emplacement>();
+		for (int i = 0; i < choisi.length; ++i) if (choisi[i]) meilleureSolution.add(emplacements[i]);
+		return meilleureSolution;
 	}
-	
-	
-	
-	
+
+	public String local(boolean print)
+	{
+		List<Emplacement> meilleureSolution = calculerLocal();
+		if (print)
+		{
+			print();
+			Emplacement.printEmplacementsChoisis(meilleureSolution);
+		}
+		return Emplacement.getRevenuTotal(meilleureSolution) + ";";
+	}
+
+	public int getCapaciteFournisseur()
+	{
+		return capaciteFournisseur;
+	}
+
+	public int getNombreEmplacements()
+	{
+		return emplacements.size();
+	}
 }

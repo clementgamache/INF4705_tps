@@ -31,6 +31,9 @@ public class vorace {
 			e.printStackTrace();
 			return;
 		}
-		ville.vorace(print);
+		long currentTime = System.currentTimeMillis();
+		String result = ville.vorace(print);
+		double timeConv = 0.001*(System.currentTimeMillis() - currentTime);
+		result += Double.valueOf(timeConv) + " sec\n";
 	}
 }

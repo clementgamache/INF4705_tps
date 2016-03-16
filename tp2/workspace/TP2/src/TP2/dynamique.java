@@ -31,6 +31,9 @@ public class dynamique {
 			e.printStackTrace();
 			return;
 		}
-		ville.dynamique(print);
+		long currentTime = System.currentTimeMillis();
+		String result = ville.dynamique(print);
+		double timeConv = 0.001*(System.currentTimeMillis() - currentTime);
+		result += Double.valueOf(timeConv) + " sec\n";
 	}
 }

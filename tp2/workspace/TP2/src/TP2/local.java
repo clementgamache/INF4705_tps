@@ -31,6 +31,9 @@ public class local {
 			e.printStackTrace();
 			return;
 		}
-		ville.local(print);
+		long currentTime = System.currentTimeMillis();
+		String result = ville.local(print);
+		double timeConv = 0.001*(System.currentTimeMillis() - currentTime);
+		result += Double.valueOf(timeConv) + " sec\n";
 	}
 }
