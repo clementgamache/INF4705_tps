@@ -134,27 +134,20 @@ public class Ville
 
 	public List<Emplacement> calculerDynamique()
 	{
-		// revenu[i, j] est le revenu maximal pour combler une capacite de j avec
-		// les i premiers emplacements
-		int[][] revenu = new int[emplacements.size()][capaciteFournisseur+1];
-		// Transforme emplacement en tableau pour acces rapide
-		Emplacement[] emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
-
-		
 
 		//array[i, j] est le revenu maximal pour combler une capacite de j avec les i premiers emplacements
-		Integer[][] array = new Integer[capaciteFournisseur+1][emplacements.length];
+		Integer[][] array = new Integer[capaciteFournisseur+1][emplacements.size()];
 		for (int i = 0 ; i < capaciteFournisseur+1 ; i++) {
-			for (int j = 0 ; j < emplacements.length; j++) {
+			for (int j = 0 ; j < emplacements.size(); j++) {
 				array[i][j] = 0;
 			}
 		}
 		for (int j = 1 ; j < capaciteFournisseur + 1 ; j++) {
-			if (emplacements[0].getPoulet() <= j) {
-				array[j][0] = emplacements[0].getRevenu();
+			if (emplacements.get(0).getPoulet() <= j) {
+				array[j][0] = emplacements.get(0).getRevenu();
 			}
-			for (int i = 1 ; i < emplacements.length ; i++) {
-				Emplacement emplacement = emplacements[i];
+			for (int i = 1 ; i < emplacements.size() ; i++) {
+				Emplacement emplacement = emplacements.get(i);
 				int jmq = j - emplacement.getPoulet();
 				int max1 = 0;
 				if (jmq >= 0) {
@@ -163,7 +156,7 @@ public class Ville
 				array[j][i] = Math.max(max1, array[j][i-1]);
 			}
 		}
-		int i = emplacements.length-1;
+		int i = emplacements.size()-1;
 		int j = capaciteFournisseur;
 		int currentValue = array[j][i];
 		List<Emplacement> used = new LinkedList<Emplacement>(); 
@@ -173,15 +166,16 @@ public class Ville
 			}
 			//else if (j > 0 && )
 			else {
-				Emplacement e = emplacements[i];
+				Emplacement e = emplacements.get(i);
 				used.add(e);
 				currentValue -= e.getRevenu();
 				j -= e.getPoulet();
 			}
 		}
 		return used;
-	}
-	
+		
+}
+
 	public String dynamique(boolean print)
 	{
 		List<Emplacement> used = calculerDynamique();

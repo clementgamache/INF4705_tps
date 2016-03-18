@@ -140,7 +140,9 @@ public class Ville
 		// Transforme emplacement en tableau pour acces rapide
 		Emplacement[] emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
 
-		
+		// Assignons a l'emplacements 0 tous les poulets inutiles en configurant
+		// le revenu de l'emplacement 0 pour tous nombre de poulet equal ou plus grand
+		// que la demande locale.
 
 		//array[i, j] est le revenu maximal pour combler une capacite de j avec les i premiers emplacements
 		Integer[][] array = new Integer[capaciteFournisseur+1][emplacements.length];

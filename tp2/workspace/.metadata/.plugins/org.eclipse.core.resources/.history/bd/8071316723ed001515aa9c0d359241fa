@@ -136,43 +136,45 @@ public class Ville
 	{
 		// revenu[i, j] est le revenu maximal pour combler une capacite de j avec
 		// les i premiers emplacements
-		int[][] revenu = new int[emplacements.size()][capaciteFournisseur+1];
+		int[][] revenu = new int[emplacements.size()][capaciteFournisseur + 1];
 		// Transforme emplacement en tableau pour acces rapide
 		Emplacement[] emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
 
-		
+		// Assignons a l'emplacements 0 tous les poulets inutiles en configurant
+		// le revenu de l'emplacement 0 pour tous nombre de poulet equal ou plus grand
+		// que la demande locale.
+		for (int j = emplacements[0].getPoulet(); j <= capaciteFournisseur; ++j)
+		{
+			revenu[0][emplacements[0].getPoulet()] = emplacements[0].getRevenu();
+		}
 
-		//array[i, j] est le revenu maximal pour combler une capacite de j avec les i premiers emplacements
-		Integer[][] array = new Integer[capaciteFournisseur+1][emplacements.length];
-		for (int i = 0 ; i < capaciteFournisseur+1 ; i++) {
-			for (int j = 0 ; j < emplacements.length; j++) {
-				array[i][j] = 0;
+		// Algorithm dynamique.
+		for (int i = 1; i < emplacements.length; i++) // Pour chaque emplacement suivant.
+		{
+			for (int j = 0; j < emplacements[i].getPoulet(); ++j)
+			{
+				revenu[i][j] = revenu[i - 1][j];
+			}
+			for (int j = emplacements[i].getPoulet(); j <= capaciteFournisseur; j++)
+			{
+				revenu[i][j] = Math.max(emplacements[i].getRevenu() + revenu[i - 1][j - emplacements[i].getPoulet()], revenu[i - 1][j]);
 			}
 		}
-		for (int j = 1 ; j < capaciteFournisseur + 1 ; j++) {
-			if (emplacements[0].getPoulet() <= j) {
-				array[j][0] = emplacements[0].getRevenu();
-			}
-			for (int i = 1 ; i < emplacements.length ; i++) {
-				Emplacement emplacement = emplacements[i];
-				int jmq = j - emplacement.getPoulet();
-				int max1 = 0;
-				if (jmq >= 0) {
-					max1 = emplacement.getRevenu() + array[jmq][i-1];
-				}
-				array[j][i] = Math.max(max1, array[j][i-1]);
-			}
-		}
-		int i = emplacements.length-1;
+
+		// Calcul de la propagation inverse pour retrouver les emplacements optimaux choisi.
+		int i = emplacements.length - 1;
 		int j = capaciteFournisseur;
-		int currentValue = array[j][i];
-		List<Emplacement> used = new LinkedList<Emplacement>(); 
-		while (currentValue > 0) {
-			if (i > 0 && array[j][i-1] == currentValue) {
+		int currentValue = revenu[i][j];
+		List<Emplacement> used = new LinkedList<Emplacement>();
+		while (currentValue > 0)
+		{
+			if (i > 0 && revenu[i - 1][j] == currentValue)
+			{
 				i--;
 			}
-			//else if (j > 0 && )
-			else {
+			// else if (j > 0 && )
+			else
+			{
 				Emplacement e = emplacements[i];
 				used.add(e);
 				currentValue -= e.getRevenu();
