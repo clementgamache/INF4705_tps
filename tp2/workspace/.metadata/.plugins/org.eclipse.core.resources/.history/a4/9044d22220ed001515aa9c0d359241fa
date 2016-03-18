@@ -196,18 +196,23 @@ public class Ville
 
 	public List<Emplacement> calculerLocal()
 	{
+		int compte = 0;
 		Emplacement[]     emplacements = this.emplacements.toArray(new Emplacement[this.emplacements.size()]);
 		List<Emplacement> voraceList   = calculerVorace();
 		Set<Emplacement>  voraceSet    = new HashSet<Emplacement>(voraceList);
-		boolean[]         choisi       = new boolean[emplacements.length];
-		for (int i = 0; i < emplacements.length; ++i) if (voraceSet.contains(emplacements[i])) choisi[i] = true;
-
+		//boolean[]         choisi       = new boolean[emplacements.length];
+		List<Integer> utilises = new ArrayList<Integer>();
+		List<Integer> nonUtilises = new ArrayList<Integer>();
+		for (int i = 0; i < emplacements.length; ++i) 
+			if (voraceSet.contains(emplacements[i])) utilises.add(Integer.valueOf(i));
+			else nonUtilises.add(Integer.valueOf(i));
 		// Emplacement.printEmplacementsChoisis(meilleureSolution);
 		int consommation = Emplacement.getConsommationTotale(voraceList);
 		int revenu       = Emplacement.getRevenuTotal(voraceList);
 		boolean changement = true;
 		while (changement)
 		{
+			compte++;
 			changement                = false;
 			int iChoisi               = -1;
 			int jChoisi               = -1;
@@ -215,17 +220,33 @@ public class Ville
 			int lChoisi               = -1;
 			int meilleurRevenu        = revenu;
 			int meilleureConsommation = consommation;
-			for (int i = 0; i < emplacements.length; ++i) if (choisi[i])
+			for (int i = 0; i < utilises.size(); ++i)
 			{
-				for (int j = 0; j < i; ++j) if (choisi[j])
+				for (int j = i + 1; j < utilises.size(); ++j)
 				{
-					for (int k = 0; k < emplacements.length; ++k) if (!choisi[k])
+					for (int k = 0; k < nonUtilises.size(); ++k)
 					{
-						for (int l = 0; l < k; ++l) if (!choisi[l])
+//						if (i == 0 && j == 1) {
+//							//ajoute k
+//							int nouveauRevenu = revenu + emplacements[nonUtilises.get(k)].getRevenu();
+//							int nouvelleConsommation = consommation + emplacements[nonUtilises.get(k)].getPoulet();
+//							if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
+//							{
+//								iChoisi = -1;
+//								jChoisi = -1;
+//								kChoisi = k;
+//								lChoisi = -1;
+//								meilleurRevenu = nouveauRevenu;
+//								meilleureConsommation = nouvelleConsommation;
+//								changement = true;
+//							}
+//
+//						}
+						for (int l = k + 1; l < nonUtilises.size(); ++l) 
 						{
 							// Enleve i et j, ajoute k et l.
-							int nouveauRevenu = revenu - emplacements[i].getRevenu() - emplacements[j].getRevenu() + emplacements[k].getRevenu() + emplacements[l].getRevenu();
-							int nouvelleConsommation = consommation - emplacements[i].getPoulet() - emplacements[j].getPoulet() + emplacements[k].getPoulet() + emplacements[l].getPoulet();
+							int nouveauRevenu = revenu - emplacements[utilises.get(i)].getRevenu() - emplacements[utilises.get(j)].getRevenu() + emplacements[nonUtilises.get(k)].getRevenu() + emplacements[nonUtilises.get(l)].getRevenu();
+							int nouvelleConsommation = consommation - emplacements[utilises.get(i)].getPoulet() - emplacements[utilises.get(j)].getPoulet() + emplacements[nonUtilises.get(k)].getPoulet() + emplacements[nonUtilises.get(l)].getPoulet();
 							if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
 							{
 								iChoisi = i;
@@ -239,10 +260,11 @@ public class Ville
 						}
 
 						// Enleve i et j, ajoute k.
-						int nouveauRevenu = revenu - emplacements[i].getRevenu() - emplacements[j].getRevenu() + emplacements[k].getRevenu();
-						int nouvelleConsommation = consommation - emplacements[i].getPoulet() - emplacements[j].getPoulet() + emplacements[k].getPoulet();
+						int nouveauRevenu = revenu - emplacements[utilises.get(i)].getRevenu() - emplacements[utilises.get(j)].getRevenu() + emplacements[nonUtilises.get(k)].getRevenu();
+						int nouvelleConsommation = consommation - emplacements[utilises.get(i)].getPoulet() - emplacements[utilises.get(j)].getPoulet() + emplacements[nonUtilises.get(k)].getPoulet();
 						if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
 						{
+							System.out.println("ici");
 							iChoisi = i;
 							jChoisi = j;
 							kChoisi = k;
@@ -253,13 +275,13 @@ public class Ville
 						}
 					}
 				}
-				for (int k = 0; k < emplacements.length; ++k) if (!choisi[k])
+				for (int k = 0; k < nonUtilises.size(); ++k)
 				{
-					for (int l = 0; l < k; ++l) if (!choisi[l])
+					for (int l = k + 1; l < nonUtilises.size(); ++l)
 					{
 						// Enleve i, ajoute k et l.
-						int nouveauRevenu = revenu - emplacements[i].getRevenu() + emplacements[k].getRevenu() + emplacements[l].getRevenu();
-						int nouvelleConsommation = consommation - emplacements[i].getPoulet() + emplacements[k].getPoulet() + emplacements[l].getPoulet();
+						int nouveauRevenu = revenu - emplacements[utilises.get(i)].getRevenu() + emplacements[nonUtilises.get(k)].getRevenu() + emplacements[nonUtilises.get(l)].getRevenu();
+						int nouvelleConsommation = consommation - emplacements[utilises.get(i)].getPoulet() + emplacements[nonUtilises.get(k)].getPoulet() + emplacements[nonUtilises.get(l)].getPoulet();
 						if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
 						{
 							iChoisi = i;
@@ -273,8 +295,8 @@ public class Ville
 					}
 
 					// Enleve i, ajoute k.
-					int nouveauRevenu = revenu - emplacements[i].getRevenu() + emplacements[k].getRevenu();
-					int nouvelleConsommation = consommation - emplacements[i].getPoulet() + emplacements[k].getPoulet();
+					int nouveauRevenu = revenu - emplacements[utilises.get(i)].getRevenu() + emplacements[nonUtilises.get(k)].getRevenu();
+					int nouvelleConsommation = consommation - emplacements[utilises.get(i)].getPoulet() + emplacements[nonUtilises.get(k)].getPoulet();
 					if (nouveauRevenu > meilleurRevenu && nouvelleConsommation <= capaciteFournisseur)
 					{
 						iChoisi = i;
@@ -289,17 +311,23 @@ public class Ville
 			}
 			if (changement)
 			{
-				if (iChoisi >= 0) choisi[iChoisi] = false;
-				if (jChoisi >= 0) choisi[jChoisi] = false;
-				if (kChoisi >= 0) choisi[kChoisi] = true;
-				if (lChoisi >= 0) choisi[lChoisi] = true;
+				if (iChoisi >= 0) {utilises.remove(Integer.valueOf(iChoisi)); nonUtilises.add(Integer.valueOf(iChoisi));};
+				if (jChoisi >= 0) {utilises.remove(Integer.valueOf(jChoisi)); nonUtilises.add(Integer.valueOf(jChoisi));};
+				if (kChoisi >= 0) {nonUtilises.remove(Integer.valueOf(kChoisi)); utilises.add(Integer.valueOf(kChoisi));};
+				if (lChoisi >= 0) {nonUtilises.remove(Integer.valueOf(lChoisi)); utilises.add(Integer.valueOf(lChoisi));};
 				revenu = meilleurRevenu;
 				consommation = meilleureConsommation;
+				System.out.println(Integer.valueOf(revenu));
+				
+				List<Emplacement> m = new LinkedList<Emplacement>();
+				for (int i = 0; i < utilises.size(); ++i)  m.add(emplacements[utilises.get(i)]);
+				Emplacement.printEmplacementsChoisis(m);
 			}
 		}
 
+		System.out.println(Integer.valueOf(compte));
 		List<Emplacement> meilleureSolution = new LinkedList<Emplacement>();
-		for (int i = 0; i < choisi.length; ++i) if (choisi[i]) meilleureSolution.add(emplacements[i]);
+		for (int i = 0; i < utilises.size(); ++i)  meilleureSolution.add(emplacements[utilises.get(i)]);
 		return meilleureSolution;
 	}
 
