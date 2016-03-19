@@ -1,0 +1,50 @@
+package TP2;
+
+public class Emplacement {
+	private int id;
+	private int revenu;
+	private int poulet;
+	private float lowerbound;
+	private float higherbound;
+	
+	public Emplacement(int id, int revenu, int poulet)
+	{
+		this.id = id;
+		this.revenu = revenu;
+		this.poulet = poulet;
+	}
+	public int getId()
+	{
+		return id;
+	}
+	public int getRevenu()
+	{
+		return revenu;
+	}
+	public int getPoulet()
+	{
+		return poulet;
+	}
+	public float getRentabilite()
+	{
+		return (float)revenu/(float)poulet;
+	}
+	
+	public void setLowerBound(float value)
+	{
+		lowerbound = value;
+	}
+	public void setHigherBound(float value)
+	{
+		higherbound = value;
+	}
+	
+	public float getLowerBound()
+	{
+		return lowerbound;
+	}
+	public float getHigherBound()
+	{
+		return higherbound;
+	}
+}

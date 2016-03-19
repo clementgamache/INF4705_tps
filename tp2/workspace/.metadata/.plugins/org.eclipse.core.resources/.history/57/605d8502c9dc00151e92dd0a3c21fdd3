@@ -1,0 +1,12 @@
+package TP2;
+
+public class Ville {
+	public Ville(String filename)
+	{
+		
+	}
+	private readFile()
+	{
+		
+	}
+}
