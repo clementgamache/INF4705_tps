@@ -1,0 +1,11 @@
+# Ignore everything
+*.*
+
+# But not these files...
+!.gitignore
+!*.java
+!*.txt
+!*.xls
+!*.docx
+!*.doc
+!*.xlsx
